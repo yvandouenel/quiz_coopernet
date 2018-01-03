@@ -1,0 +1,15 @@
+coopernet_quiz_homepage:
+    path:     /
+    defaults: { _controller: CoopernetQuizBundle:Quiz:home }
+coopernet_quiz_create_link_between_entities:
+    path:     /create-link-between-entities
+    defaults: { _controller: CoopernetQuizBundle:Quiz:createlink }
+coopernet_quiz_view_category:
+    path:     /category/{id}
+    defaults: { _controller: CoopernetQuizBundle:Quiz:viewcategory }
+coopernet_quiz_view_quiz:
+    path:     /quiz/{id}
+    defaults: { _controller: CoopernetQuizBundle:Quiz:viewquiz }
+coopernet_quiz_view:
+    path:     /{id}
+    defaults: { _controller: CoopernetQuizBundle:Quiz:view }

@@ -1,0 +1,39 @@
+{# src/Coopernet/QuizBundle/Resources/views/Quiz/viewcategory.html.twig #}
+
+{% extends "CoopernetQuizBundle::layout.html.twig" %}
+
+{% block title %}
+    Categories - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+
+    <h1>Quiz "{{ quiz.name }}" <span
+                style="font-size:10px; font-weigh:400;">n° {{ quiz.id }}</span></h1>
+
+    {% if not questions_answers is empty %}
+        <h2>Questions et réponses</h2>
+        <ul>
+
+            {% for question_answer in questions_answers %}
+                {% if loop.first %}
+                    <h4>{{ question_answer.question.title }}</h4>
+                {% endif %}
+                <li>
+
+                    {% if question_answer.goodAnswer %}
+                        <h4>Bonne réponse : {{ question_answer.answer.title }}</h4>
+                    {% else %}
+                        <h4>Mauvaise réponse : {{ question_answer.answer.title }}</h4>
+                    {% endif %}
+
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    <hr>
+
+
+{% endblock %}

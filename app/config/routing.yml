@@ -1,0 +1,7 @@
+coopernet_quiz:
+    resource: "@CoopernetQuizBundle/Resources/config/routing.yml"
+    prefix:   /quiz
+
+app:
+    resource: '@AppBundle/Controller/'
+    type: annotation

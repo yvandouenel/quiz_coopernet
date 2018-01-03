@@ -1,0 +1,25 @@
+{# src/Coopernet/QuizBundle/Resources/views/Quiz/viewcategory.html.twig #}
+
+{% extends "CoopernetQuizBundle::layout.html.twig" %}
+
+{% block title %}
+    Categories - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+
+    <h1>Tous les quiz de la catégorie "{{ category.name }}" <span
+                style="font-size:10px; font-weigh:400;">n° {{ category.id }}</span></h1>
+    {% if not quizs is empty %}
+        <ul>
+        {% for quiz in quizs %}
+            <li><h3><a href="{{ path('coopernet_quiz_view_quiz', {'id': quiz.id}) }}">{{ quiz.name }}</a></h3></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    <hr>
+
+
+{% endblock %}

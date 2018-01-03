@@ -1,0 +1,32 @@
+{# src/Coopernet/QuizBundle/Resources/views/Home/index.html.twig #}
+
+{% extends "CoopernetQuizBundle::layout.html.twig" %}
+
+{% block title %}
+    Categories - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+    {# On définit un sous-titre commun à toutes les pages du bundle, par exemple #}
+    <h1>Categories de quiz</h1>
+    {% if not categories is empty %}
+        <ul>
+        {% for category in categories %}
+            <li><a href="/quiz/category/{{ category.id }}">{{ category.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    <hr>
+
+
+    <a href="{{ path('coopernet_quiz_create_link_between_entities') }}">Créer les liens entre les différentes entités </a>
+    <p>Attention, il peut être nécessaire d'avoir :</p>
+    <ul>
+        <li>supprimé les tables existantes puis de les avoir recréées : doctrine:schema:update --force
+        </li>
+        <li>recréé les données via le bundle"fixture" (doctrine:fixture:load)
+        </li>
+    </ul>
+
+{% endblock %}
