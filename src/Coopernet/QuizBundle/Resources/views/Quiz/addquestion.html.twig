@@ -1,0 +1,18 @@
+{# src/Coopernet/QuizBundle/Resources/views/Quiz/viewcategory.html.twig #}
+
+{% extends "CoopernetQuizBundle::layout.html.twig" %}
+
+{% block title %}
+    Categories - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+
+
+    <h2>Ajouter une question au Quiz <br />"{{ quiz.name }}"</h2>
+    {{ form(form) }}
+    <hr>
+
+
+{% endblock %}

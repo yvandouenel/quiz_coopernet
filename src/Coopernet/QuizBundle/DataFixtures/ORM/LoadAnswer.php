@@ -27,7 +27,8 @@ class LoadAnswer implements FixtureInterface
     $titles = array(
       'php bin/console doctrine:generate:entity',
       'thc bin/console doctrine:generate:entity',
-      '$this->getDoctrine()->getManager();'
+      '$this->getDoctrine()->getManager();',
+      'php bin/console doctrine:schema:update --force'
     );
 
     foreach ($titles as $title) {

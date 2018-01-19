@@ -9,28 +9,75 @@
 {% block body %}
 
 
-    <h1>Quiz "{{ quiz.name }}" <span
-                style="font-size:10px; font-weigh:400;">n° {{ quiz.id }}</span></h1>
 
     {% if not questions_answers is empty %}
-        <h2>Questions et réponses</h2>
-        <ul>
+        <table class="table">
 
             {% for question_answer in questions_answers %}
-                {% if loop.first %}
-                    <h4>{{ question_answer.question.title }}</h4>
-                {% endif %}
-                <li>
 
-                    {% if question_answer.goodAnswer %}
-                        <h4>Bonne réponse : {{ question_answer.answer.title }}</h4>
+
+                {% if loop.length > 1 %}
+                    {% if loop.first %}
+                        {% for q in question_answer.question.quizs %}
+                            {% if loop.first %}
+
+                                <h1>Quiz "{{ q.name }}"</h1>
+                                <a href="{{ path('coopernet_quiz_add_question', {'id': q.id}) }}">
+                                    <span class="label label-primary">+ Créer une question</span>
+                                </a>
+                                <h2>Questions et réponses</h2>
+                            {% endif %}
+                        {% endfor %}
+                        {% set previous_item = question_answer.question.id %}
+                        <tr>
+                            <h3>{{ question_answer.question.title }}</h3>
+                        </tr>
+                        <tr>
+                            {% if question_answer.goodAnswer %}
+                                <td class="success">{{ question_answer.answer.title }}</td>
+                            {% else %}
+                                <td class="warning">{{ question_answer.answer.title }}</td>
+                            {% endif %}
+                        </tr>
                     {% else %}
-                        <h4>Mauvaise réponse : {{ question_answer.answer.title }}</h4>
+
+                        {% if previous_item != question_answer.question.id %}
+                            <tr>
+                                <td>
+                                    <h2>{{ question_answer.question.title }}</h2>
+                                </td>
+                            </tr>
+                        {% endif %}
+                        <tr>
+                            {% if question_answer.goodAnswer %}
+                                <td class="success">{{ question_answer.answer.title }}</td>
+                            {% else %}
+                                <td class="warning">{{ question_answer.answer.title }}</td>
+                            {% endif %}
+                        </tr>
+                        {% set previous_item = questions_answers[loop.index0 - 1].question.id %}
+                        </tr>
+
                     {% endif %}
 
-                </li>
+
+
+                {% else %}
+                    <tr>
+                        <td><h3>{{ question_answer.question.title }}</h3></td>
+                    </tr>
+                    <tr>
+                        {% if question_answer.goodAnswer %}
+                            <td class="success">{{ question_answer.answer.title }}</td>
+                        {% else %}
+                            <td class="warning">{{ question_answer.answer.title }}</td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
             {% endfor %}
-        </ul>
+        </table>
+
+
     {% endif %}
 
     <hr>

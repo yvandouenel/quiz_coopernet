@@ -17,9 +17,23 @@ class QuestionAnswerRepository extends \Doctrine\ORM\EntityRepository {
       ->leftJoin('qa.question', 'question')
       ->leftJoin('question.quizs','quizs')
       ->where('quizs.id = :quiz_id')
-      ->addSelect('question');
+      ->addSelect('question')
+      ->addSelect('quizs');
 
     $query->setParameter('quiz_id', $quiz_id);
+
+    return $query
+      ->getQuery()
+      ->getResult();
+  }
+  public function getAllAnswerFromQuestion($question_id) {
+    $query = $this
+      ->createQueryBuilder('qa')
+      ->leftJoin('qa.answer', 'answer')
+      ->addSelect('answer')
+      ->where('qa.question = :question_id');
+
+    $query->setParameter('question_id', $question_id);
 
     return $query
       ->getQuery()

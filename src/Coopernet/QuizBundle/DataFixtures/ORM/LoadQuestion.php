@@ -20,6 +20,7 @@ class LoadQuestion implements FixtureInterface {
     // Liste des questions à ajouter
     $titles = array(
       'Commande pour ajouter une entité ?',
+      'Forcer la mise à jour du shéma de base de données ?',
       "Création d'un entity manager ?"
     );
 

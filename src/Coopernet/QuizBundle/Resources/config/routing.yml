@@ -10,6 +10,12 @@ coopernet_quiz_view_category:
 coopernet_quiz_view_quiz:
     path:     /quiz/{id}
     defaults: { _controller: CoopernetQuizBundle:Quiz:viewquiz }
+coopernet_quiz_add_question:
+    path:     /quiz/{id}/add/question
+    defaults: { _controller: CoopernetQuizBundle:Quiz:addquizquestion }
+coopernet_quiz_view_question:
+    path:     /question/{id}
+    defaults: { _controller: CoopernetQuizBundle:Quiz:viewquestion }
 coopernet_quiz_view:
     path:     /{id}
     defaults: { _controller: CoopernetQuizBundle:Quiz:view }

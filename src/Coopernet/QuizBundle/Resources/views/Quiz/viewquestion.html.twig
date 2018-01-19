@@ -1,0 +1,34 @@
+{# src/Coopernet/QuizBundle/Resources/views/Quiz/viewcategory.html.twig #}
+
+{% extends "CoopernetQuizBundle::layout.html.twig" %}
+
+{% block title %}
+    Question - {{ parent() }}
+{% endblock %}
+
+{% block body %}
+
+<h2>Question {{ question.id }} :: {{ question.title }}</h2>
+
+{% if not questions_answers is empty %}
+    <table class="table">
+
+    {% for question_answer in questions_answers %}
+        <tr>
+        {% if question_answer.goodAnswer %}
+            <td class="success">{{ question_answer.answer.title }}</td>
+        {% else %}
+            <td class="warning">{{ question_answer.answer.title }}</td>
+        {% endif %}
+
+        </tr>
+    {% endfor %}
+
+    </table>
+    {% endif %}
+
+
+    <hr>
+
+
+    {% endblock %}
