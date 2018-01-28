@@ -8,8 +8,14 @@
 
 {% block body %}
 
+    {% for message in app.flashes('notice') %}
+        <div class="alert alert-info">
+            {{ message }}
+        </div>
+    {% endfor %}
 
-
+    {% set quizid = 0 %}
+    {% set sure = 'Etes vous sûrs de vouloir supprimer cet élément ?' %}
     {% if not questions_answers is empty %}
         <table class="table">
 
@@ -20,7 +26,7 @@
                     {% if loop.first %}
                         {% for q in question_answer.question.quizs %}
                             {% if loop.first %}
-
+                                {% set quizid = q.id %}
                                 <h1>Quiz "{{ q.name }}"</h1>
                                 <a href="{{ path('coopernet_quiz_add_question', {'id': q.id}) }}">
                                     <span class="label label-primary">+ Créer une question</span>
@@ -30,32 +36,71 @@
                         {% endfor %}
                         {% set previous_item = question_answer.question.id %}
                         <tr>
-                            <h3>{{ question_answer.question.title }}</h3>
+                            <td>
+                                <h3>{{ question_answer.question.title }}</h3>
+                            </td>
+                            <td><a onclick="return confirm('{{sure}}')"" href="{{ path('coopernet_quiz_remove_question', {
+                                    'quizid': quizid,
+                                    'questionid': question_answer.question.id
+                                }) }}">Supprimer</a>
+                                <br/>
+                                <a href="{{ path('coopernet_quiz_view_question', {
+                                    'id': question_answer.question.id
+                                }) }}">Ajouter une réponse</a>
+                            </td>
                         </tr>
                         <tr>
                             {% if question_answer.goodAnswer %}
                                 <td class="success">{{ question_answer.answer.title }}</td>
+                                <td><a onclick="return confirm('{{sure}}')"" href="{{ path('coopernet_quiz_remove_answer', {
+                                        'quizid': quizid,
+                                        'answerid': question_answer.answer.id
+                                    }) }}">Supprimer</a></td>
                             {% else %}
                                 <td class="warning">{{ question_answer.answer.title }}</td>
+                                <td><a href="{{ path('coopernet_quiz_remove_answer', {
+                                        'quizid': quizid,
+                                        'answerid': question_answer.answer.id
+                                    }) }}">Supprimer</a></td>
                             {% endif %}
                         </tr>
                     {% else %}
 
                         {% if previous_item != question_answer.question.id %}
+
                             <tr>
                                 <td>
                                     <h2>{{ question_answer.question.title }}</h2>
+                                </td>
+                                <td><a onclick="return confirm('{{sure}}')"" href="{{ path('coopernet_quiz_remove_question', {
+                                        'quizid': quizid,
+                                        'questionid': question_answer.question.id
+                                    }) }}">Supprimer</a>
+                                    <br/>
+                                    <a  href="{{ path('coopernet_quiz_view_question', {
+                                        'id': question_answer.question.id
+                                    }) }}">Ajouter une réponse</a>
                                 </td>
                             </tr>
                         {% endif %}
                         <tr>
                             {% if question_answer.goodAnswer %}
                                 <td class="success">{{ question_answer.answer.title }}</td>
+                                <td><a onclick="return confirm('{{sure}}')"" href="{{ path('coopernet_quiz_remove_answer', {
+                                        'quizid': quizid,
+                                        'answerid': question_answer.answer.id
+                                    }) }}">Supprimer</a></td>
                             {% else %}
                                 <td class="warning">{{ question_answer.answer.title }}</td>
+                                <td><a onclick="return confirm('{{sure}}')"" href="{{ path('coopernet_quiz_remove_answer', {
+                                        'quizid': quizid,
+                                        'answerid': question_answer.answer.id
+                                    }) }}">Supprimer</a></td>
                             {% endif %}
                         </tr>
-                        {% set previous_item = questions_answers[loop.index0 - 1].question.id %}
+
+                        {% set previous_item= question_answer.question.id %}
+
                         </tr>
 
                     {% endif %}

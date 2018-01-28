@@ -29,7 +29,7 @@ class QuestionAnswer
     private $goodAnswer;
 
   /**
-   * @ORM\ManyToOne(targetEntity="Coopernet\QuizBundle\Entity\Answer", inversedBy="answers")
+   * @ORM\ManyToOne(targetEntity="Coopernet\QuizBundle\Entity\Answer", inversedBy="answers", cascade={"persist"})
    * @ORM\JoinColumn(nullable=false)
    */
   private $answer;
@@ -37,9 +37,7 @@ class QuestionAnswer
    * @ORM\ManyToOne(targetEntity="Coopernet\QuizBundle\Entity\Question", inversedBy="questions")
    * @ORM\JoinColumn(nullable=false)
    */
-  private $question;
-
-
+    private $question;
     /**
      * Get id
      *

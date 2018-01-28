@@ -28,7 +28,7 @@ class Question {
   private $title;
 
   /**
-   * @ORM\OneToMany(targetEntity="Coopernet\QuizBundle\Entity\QuestionAnswer", mappedBy="question")
+   * @ORM\OneToMany(targetEntity="Coopernet\QuizBundle\Entity\QuestionAnswer", mappedBy="question", cascade={"persist"})
    */
   private $questions;
 

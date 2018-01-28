@@ -18,7 +18,8 @@ class QuestionAnswerRepository extends \Doctrine\ORM\EntityRepository {
       ->leftJoin('question.quizs','quizs')
       ->where('quizs.id = :quiz_id')
       ->addSelect('question')
-      ->addSelect('quizs');
+      ->addSelect('quizs')
+      ->orderBy('question.title', 'ASC');
 
     $query->setParameter('quiz_id', $quiz_id);
 

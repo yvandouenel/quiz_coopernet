@@ -4,6 +4,8 @@ namespace Coopernet\QuizBundle\Controller;
 use Coopernet\QuizBundle\Entity\Answer;
 use Coopernet\QuizBundle\Entity\Question;
 use Coopernet\QuizBundle\Entity\QuestionAnswer;
+use Coopernet\QuizBundle\Form\AnswerType;
+use Coopernet\QuizBundle\Form\QuestionAnswerType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
 use Symfony\Component\HttpFoundation\Request;
@@ -106,8 +108,8 @@ class QuizController extends Controller {
         $request->getSession()
           ->getFlashBag()
           ->add('notice', 'Question bien enregistrée.');
-        // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirectToRoute('coopernet_quiz_view_quiz', array('id' => $id));
+        // On redirige vers la page de visualisation de la question nouvellement créée
+        return $this->redirectToRoute('coopernet_quiz_view_question', array('id' => $question->getId()));
       }
     }
     // À ce stade, le formulaire n'est pas valide car :
@@ -126,46 +128,36 @@ class QuizController extends Controller {
     // get the entity manager
     $em = $this->getDoctrine()->getManager();
     $question = $em->getRepository("CoopernetQuizBundle:Question")->find($id);
-/*
-    // ajout de la question à la réponse
-    $question = new Question();
+
     $question_answer = new QuestionAnswer();
-    $question->addQuestion($question_answer);
-    $answer->addAnswer($question_answer1);
+
     // Création du formulaire
-    $formBuilder = $this->get('form.factory')
-      ->createBuilder(FormType::class, $answer);
-
-    // Ajout des champs
-    $formBuilder
-      ->add('title', TextType::class)
-      ->add('save', SubmitType::class);
-
-    // Génération du fomulaire
-    $form = $formBuilder->getForm();
+    $form = $this->get('form.factory')->create(QuestionAnswerType::class, $question_answer);
 
     // Si la requête est en POST
-
     if ($request->isMethod('POST')) {
+      // ajout de la bonne réponse à la question et vice versa en passant par QuestionAnswer
+      $question->addQuestion($question_answer);
+      /*$answer->addAnswer($question_answer);
+      $question_answer->setGoodAnswer(TRUE);*/
+
       // On fait le lien Requête <-> Formulaire
-      // À partir de maintenant, la variable $questiont contient les valeurs entrées dans le formulaire par le visiteur
+      // À partir de maintenant, la variable $answer contient les valeurs entrées dans le formulaire par le visiteur
       $form->handleRequest($request);
       // On vérifie que les valeurs entrées sont correctes
       // (Nous verrons la validation des objets en détail dans le prochain chapitre)
       if ($form->isValid()) {
         // On enregistre notre objet $question dans la base de données, par exemple
         $em = $this->getDoctrine()->getManager();
-        $em->persist($answer);
-        $em->persist($quiz);
+        $em->persist($question_answer);
         $em->flush();
         $request->getSession()
           ->getFlashBag()
-          ->add('notice', 'Question bien enregistrée.');
+          ->add('notice', 'Réponse enregistrée.');
         // On redirige vers la page de visualisation de l'annonce nouvellement créée
-        return $this->redirectToRoute('coopernet_quiz_view_quiz', array('id' => $id));
+        //return $this->redirectToRoute('coopernet_quiz_view_quiz', array('id' => $id));
       }
     }
-*/
     // get answers for this question
     $questions_answers = $em->getRepository("CoopernetQuizBundle:QuestionAnswer")
       ->getAllAnswerFromQuestion($id);
@@ -175,10 +167,56 @@ class QuizController extends Controller {
       ->render('CoopernetQuizBundle:Quiz:viewquestion.html.twig', array(
         'question' => $question,
         'questions_answers' =>  $questions_answers,
+        'form' => $form->createView(),
       ));
     return new Response($content);
   }
 
+  public function removeanswerAction($quizid, $answerid, Request $request) {
+    // On récupère la question, on l'efface et cela va effacer les question_answer
+    // liées grâce à l'annotation persit={"remove"}
+    $em = $this->getDoctrine()->getManager();
+    $answer = $em->getRepository("CoopernetQuizBundle:Answer")
+      ->find($answerid);
+    $em->remove($answer);
+    $em->flush();
+    $this->addFlash(// méthode de l’objet request
+      'notice',
+      'Réponse ' . $answerid . ' effacée.'
+    );
+
+    return $this->redirectToRoute('coopernet_quiz_view_quiz', array('id' => $quizid));
+  }
+
+  public function removequestionAction($quizid, $questionid, Request $request) {
+
+    $em = $this->getDoctrine()->getManager();
+    $question = $em->getRepository("CoopernetQuizBundle:Question")
+      ->find($questionid);
+
+    $em->remove($question);
+
+    try{
+      $em->flush();
+    } catch (\Doctrine\DBAL\DBALException $e) {
+
+      $exception_message = $e->getPrevious()->getCode();
+      $this->addFlash(// méthode de l’objet request
+        'notice',
+        'Question ' . $questionid .
+        ' ne peut être effacée. Des réponses lui sont encore associées. '.
+        'Code de l\'exception : ' . $exception_message
+      );
+      return $this->redirectToRoute('coopernet_quiz_view_quiz', array('id' => $quizid));
+    }
+
+    $this->addFlash(// méthode de l’objet request
+      'notice',
+      'Question ' . $questionid . ' effacée.'
+    );
+
+    return $this->redirectToRoute('coopernet_quiz_view_quiz', array('id' => $quizid));
+  }
   public function createlinkAction(Request $request) {
     // récupérer la catégorie qui a pour nom : "SYMFONY"
     $em = $this->getDoctrine()->getManager();

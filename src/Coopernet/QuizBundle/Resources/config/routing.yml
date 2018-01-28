@@ -16,6 +16,12 @@ coopernet_quiz_add_question:
 coopernet_quiz_view_question:
     path:     /question/{id}
     defaults: { _controller: CoopernetQuizBundle:Quiz:viewquestion }
+coopernet_quiz_remove_question:
+    path:     /{quizid}/removequestion/{questionid}
+    defaults: { _controller: CoopernetQuizBundle:Quiz:removequestion }
+coopernet_quiz_remove_answer:
+    path:     /{quizid}/removeanswer/{answerid}
+    defaults: { _controller: CoopernetQuizBundle:Quiz:removeanswer }
 coopernet_quiz_view:
     path:     /{id}
     defaults: { _controller: CoopernetQuizBundle:Quiz:view }

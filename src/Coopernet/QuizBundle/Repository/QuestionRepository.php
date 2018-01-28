@@ -22,4 +22,21 @@ class QuestionRepository extends \Doctrine\ORM\EntityRepository {
       ->getQuery()
       ->getResult();
   }
+  public function getAllQFromSpecficQuiz($quiz_id) {
+    $query = $this
+      ->createQueryBuilder('question')
+      ->leftJoin('question.questions', 'questionanswer')
+      ->addSelect('questionanswer')
+      ->leftJoin('questionanswer.answer', 'answer')
+      ->leftJoin('question.quizs','quizs')
+      ->where('quizs.id = :quiz_id')
+      ->addSelect('quizs')
+      ->orderBy('question.title', 'ASC');
+
+    $query->setParameter('quiz_id', $quiz_id);
+
+    return $query
+      ->getQuery()
+      ->getResult();
+  }
 }
